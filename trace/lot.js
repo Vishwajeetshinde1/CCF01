@@ -1,0 +1,5 @@
+const lot=LOTS.find(l=>l.no==new URLSearchParams(location.search).get("lot")),M=Object.fromEntries(FARMERS.map(f=>[f.id,f])),d=o=>Object.entries(o).map(([k,v])=>`<div><span class=mut>${k}</span><br>${v}</div>`).join("");
+if(!lot)$("lot").innerHTML='<div class=slot>Lot not found. <a href="index.html">See all lots</a></div>';
+else{const t=lot.farmers.reduce((a,x)=>a+x.qty,0);document.title=`Lot ${lot.no} ${lot.name} - CCF`;
+$("lot").innerHTML=`<div class=qr><div><h2>Lot ${lot.no} ${lot.name}</h2><p class=lead>Processed ${lot.date}. ${lot.farmers.length} farmers, ${F(t)} quintal seed cotton, ${lot.bales} bales.</p></div></div><h3 style="margin-top:28px">Farmers in this lot</h3>`+lot.farmers.map(x=>{const f=M[x.id]||{name:x.id,quality:{},hvi:{}};return`<details class=card><summary>${f.name}, ${f.village}, ${f.district}, ${f.state}<br><span class=mut>Variety: ${f.hybrid}</span></summary><div class=in>${d({"Quantity in lot":x.qty+" quintal","Area":f.acres+" acres",...(CCF_CONFIG.showContact?{"Contact":f.phone}:{}),...f.quality})}${d(f.hvi)}</div></details>`}).join("");
+}
