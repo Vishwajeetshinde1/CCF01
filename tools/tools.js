@@ -1,0 +1,9 @@
+const U=[
+{t:"Candy and outturn",n:"Standard moisture 8%. One bale is 170 kg of lint and one candy is 355.56 kg.",
+f:[["w","Seed cotton weight (kg)",10000],["m","Moisture in seed cotton (%)",10],["l","Lint content (%)",36],["g","Ginning outturn, GOT (%)",34],["y","Yarn yield from lint (%)",80]],
+o:v=>{const a=v.w*(100-v.m)/92,l=a*v.g/100;return{big:["Lint output",F(l)+" kg"],r:[["Candy",F(l/355.56,2)],["Bales",F(l/170,1)],["Yarn",F(l*v.y/100)+" kg"],["Ginning efficiency",(v.l?F(v.g/v.l*100,1):"-")+"%"],["Cotton seed",F(a-l)+" kg"]]}}},
+{t:"Procurement profit and loss",n:"Seed cotton is sold as lint bales plus cotton seed.",
+f:[["q","Seed cotton bought (quintal)",100],["p","Purchase price (₹ per quintal)",7000],["e","Processing fee (₹ per quintal)",150],["x","Transport and other (₹ per quintal)",100],["g","GOT (%)",34],["k","Market price (₹ per bale)",28000],["s","Cotton seed rate (₹ per kg)",30]],
+o:v=>{const b=v.q*v.g/170,sd=v.q*(100-v.g)*v.s,c=v.q*(v.p+v.e+v.x),r=b*v.k+sd,n=r-c;return{loss:n<0,big:[n<0?"Net loss":"Net profit","₹ "+F(Math.abs(n))],r:[["Bales produced",F(b,1)],["Total cost","₹ "+F(c)],["Revenue","₹ "+F(r)],["Per bale","₹ "+F(n/b)],["Break-even per bale","₹ "+F((c-sd)/b)]]}}}];
+$("tools").innerHTML=U.map((u,i)=>`<div class=card id=u${i}><h3>${u.t}</h3><p class=mut>${u.n}</p>${u.f.map(f=>`<label for=${f[0]}${i}>${f[1]}</label><input type=number inputmode=decimal min=0 step=any id=${f[0]}${i} value=${f[2]}>`).join("")}<div class=res></div></div>`).join("");
+U.forEach((u,i)=>{const c=$("u"+i),run=()=>{const v={};u.f.forEach(f=>v[f[0]]=+$(f[0]+i).value||0);const o=u.o(v);c.querySelector(".res").innerHTML=`<div class="big${o.loss?" loss":""}"><span>${o.big[0]}</span><b>${o.big[1]}</b></div>`+o.r.map(r=>`<div><span class=mut>${r[0]}</span><b>${r[1]}</b></div>`).join("")};c.oninput=run;run()});
